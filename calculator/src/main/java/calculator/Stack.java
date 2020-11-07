@@ -10,7 +10,6 @@ import java.util.ArrayList;
  *
  */
 public class Stack {
-  int size;
   ArrayList<Entry> entries;
 
   /**
@@ -18,7 +17,6 @@ public class Stack {
    */
   public Stack() {
     entries = new ArrayList<Entry>();
-    size = 0;
   }
 
   /**
@@ -27,7 +25,7 @@ public class Stack {
    * @return number of elements.
    */
   public int size() {
-    return this.size;
+    return entries.size();
   }
 
   /**
@@ -36,7 +34,6 @@ public class Stack {
    * @param i the entry to be pushed to the stack.
    */
   public void push(Entry i) {
-    this.size++;
     entries.add(i);
   }
 
@@ -46,11 +43,11 @@ public class Stack {
    * @return The entry that is currently on the top of the stack
    */
   public Entry top() throws EmptyStackException {
-    if (size < 1) {
+    if (entries.size() < 1) {
       // there isn't an element to get
       throw new EmptyStackException();
     }
-    return entries.get(size - 1);
+    return entries.get(entries.size() - 1);
   }
 
   /**
@@ -61,17 +58,18 @@ public class Stack {
    * @throws EmptyStackException thrown when this method is called on a empty stack
    */
   public Entry pop() throws EmptyStackException {
-    if (size < 1) {
+    if (entries.size() < 1) {
       // there isn't an element to remove
       throw new EmptyStackException();
     }
-    return entries.remove(--size);
+    return entries.remove(entries.size() - 1);
   }
 
   /**
    * Generates String representation from each of the values stored in this stack. <b>Warning</b>
    * this method will include every element in the output this means that the string might be larger
    * than expected and may be slow.
+   * 
    * @return the string representation of the entries separated by comma.
    */
   @Override
