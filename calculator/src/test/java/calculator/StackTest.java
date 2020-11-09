@@ -18,7 +18,6 @@ class StackTest {
     for (int i = 0; i < entryInstances.length; i++) {
       entryInstances[i] = new Entry((float) i);
     }
-
   }
 
   @Test

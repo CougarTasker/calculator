@@ -55,7 +55,7 @@ public class Stack {
    * it.
    * 
    * @return the entry on the top of the stack.
-   * @throws EmptyStackException thrown when this method is called on a empty stack
+   * @throws EmptyStackException thrown when this method is called on a empty stack.
    */
   public Entry pop() throws EmptyStackException {
     if (entries.size() < 1) {
