@@ -20,35 +20,71 @@
 			<version>5.7.0</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-controls</artifactId>
+			<version>13</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-fxml</artifactId>
+			<version>13</version>
+		</dependency>
 	</dependencies>
 	<build>
-	<plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.2.0</version>
-      </plugin>
+		<resources>
+			<resource>
+				<directory>src/main/java</directory>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>**/*.fxml</include>
+					<include>**/*.css</include>
+					<include>**/*.txt</include>
+					<include>**/*.ttf</include>
+				</includes>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.openjfx</groupId>
+				<artifactId>javafx-maven-plugin</artifactId>
+				<version>0.0.4</version>
+				<configuration>
+					<mainClass>calculator.CalcController</mainClass>
+				</configuration>
+				<executions>
+					<execution>
+						<!-- Configuration for debugging -->
+						<id>debug</id>
+						<configuration>
+							<options>
+								<option>-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:8001</option>
+							</options>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.2.0</version>
+			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
 				<version>3.0.0</version>
 				<executions>
 					<execution>
+						<phase>package</phase>
 						<goals>
-							<goal>exec</goal>
+							<goal>java</goal>
 						</goals>
 					</execution>
 				</executions>
 				<configuration>
-					<executable>maven</executable>
-					<mainClass>calculator.Stack</mainClass>
-					<arguments>
-						<argument>a</argument>
-						<argument>b</argument>
-					</arguments>
-					<environmentVariables>
-						<LANG>en_US</LANG>
-					</environmentVariables>
+					<mainClass>calculator.CalcController</mainClass>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -82,7 +118,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>calculator.Stack</mainClass>
+							<mainClass>calculator.CalcController</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
