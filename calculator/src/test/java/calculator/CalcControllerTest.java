@@ -8,7 +8,7 @@ class CalcControllerTest {
 
   @BeforeEach
   void before() {
-    controllerInstance = new CalcController();
+    controllerInstance = new CalcController(null);
   }
   @Test
   void testMethods() {

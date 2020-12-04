@@ -47,7 +47,7 @@ public class Stack {
       // there isn't an element to get
       throw new EmptyStackException();
     }
-    return entries.get(entries.size() - 1);
+    return entries.get(entries.size() - 1); // get the element that is at the end of ArrayList
   }
 
   /**
@@ -63,6 +63,8 @@ public class Stack {
       throw new EmptyStackException();
     }
     return entries.remove(entries.size() - 1);
+    // get the element at the top of the stack and remove it
+    // remove also returns the element that has been removed
   }
 
   /**
@@ -75,12 +77,15 @@ public class Stack {
   @Override
   public String toString() {
     StringBuilder out = new StringBuilder();
+    // use a string builder for efficiency
     out.append("[ ");
     for (Entry i : entries) {
+      // add each element of the stack to the string
       out.append(i);
       out.append(", ");
     }
     out.append("]");
     return out.toString();
+    // return the string builder as a string
   }
 }

@@ -7,8 +7,5 @@ package calculator;
  *
  */
 public enum Type {
-  NUMBER,
-  SYMBOL,
-  STRING,
-  INVALID
+  NUMBER, SYMBOL, STRING, INVALID
 }

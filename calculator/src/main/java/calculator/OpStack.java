@@ -1,7 +1,5 @@
 package calculator;
 
-import java.util.function.BooleanSupplier;
-
 /**
  * A facade class just allowing the storage of operator symbols to hide the details of the stack
  * class. this class will be used in the shunting yard algorithm as it needs a stack just for the

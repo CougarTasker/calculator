@@ -13,7 +13,7 @@ public class CalculationException extends Exception {
   /**
    * Create a new Calculation exception with a message explaining what has gone wrong.
    * 
-   * @param message A string explaing the error. this string should be well written and concise as
+   * @param message A string explaining the error. this string should be well written and concise as
    *        it will be given to a user
    */
   public CalculationException(String message) {

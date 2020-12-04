@@ -65,7 +65,7 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </GridPane.margin>
       </Label>
-      <RadioButton fx:id="infix" mnemonicParsing="false" onMouseClicked="#InfixMouseClicked" selected="true" text="Infix" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+      <RadioButton fx:id="infix" mnemonicParsing="false" onMouseClicked="#infixMouseClicked" selected="true" text="Infix" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
          <GridPane.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </GridPane.margin>
@@ -81,7 +81,7 @@
             <Tooltip text="postfix notation" />
          </tooltip>
       </RadioButton>
-      <Label fx:id="errorLabel" text="Error " textFill="RED" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.valignment="TOP">
+      <Label fx:id="errorLabel" textFill="RED" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.valignment="TOP">
          <GridPane.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" />
          </GridPane.margin>

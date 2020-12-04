@@ -25,7 +25,8 @@ public interface ViewInterface {
 
   /**
    * Calling this method will alert the user to a error that has occurred with the calculation.
-   * @param e The exception that has been thrown 
+   * 
+   * @param e The exception that has been thrown
    */
   public void alertCalculationError(CalculationException e);
 
