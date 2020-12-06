@@ -88,4 +88,42 @@ public class Stack {
     return out.toString();
     // return the string builder as a string
   }
+  
+  
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((entries == null) ? 0 : entries.hashCode());
+    return result;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    Stack other = (Stack) obj;
+    if (entries == null) {
+      if (other.entries != null) {
+        return false;
+      }
+    } else if (!entries.equals(other.entries)) {
+      return false;
+    }
+    return true;
+  }
+
 }

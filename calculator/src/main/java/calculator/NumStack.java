@@ -53,4 +53,12 @@ public class NumStack {
   public boolean isEmpty() {
     return numStack.size() == 0;
   }
+
+  /**
+   * Returns the number of floats on the stack. 
+   * @return the size of the stack as an integer.
+   */
+  public int size() {
+    return numStack.size();
+  }
 }

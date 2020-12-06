@@ -83,4 +83,19 @@ class NumStackTest {
       }
     }, "The stack should return quickly");
   }
+
+  @Test
+  void testSize() throws EmptyStackException {
+    assertEquals(0, stackInstance.size(), "an empty stack should have size of zero");
+    stackInstance.push(1);
+    assertEquals(1, stackInstance.size(), "pushing should increse the size of the stack");
+    stackInstance.push(1);
+    assertEquals(2, stackInstance.size(), "pushing should increse the size of the stack");
+    stackInstance.pop();
+    assertEquals(1, stackInstance.size(), "poping should decrese the size of the stack");
+    stackInstance.pop();
+    assertEquals(0, stackInstance.size(), "poping should decrese the size of the stack");
+  }
 }
+
+
