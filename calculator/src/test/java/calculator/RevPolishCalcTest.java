@@ -49,27 +49,7 @@ class RevPolishCalcTest {
     }, "a calculation exception should be thrown if you try to evaluate somthing that insn't an expression");
   }
 
-  @Test
-  void testParseException() {
-    assertThrows(InvalidExpressionException.class, () -> {
-      calcInstance.parse("not a expression");
-    }, "an invalid expression should throw an invalid expression exception");
-  }
-
-  @Test
-  void testParse() {
-    try {
-      assertEquals(expressionAstackIntance, calcInstance.parse(expressionA),
-          "parse should convert to the correct stack");
-      assertEquals(expressionAstackIntance, calcInstance.parse("1,2   +"),
-          "parse should convert to the correct stack with diffrent seperators");
-      assertEquals(expressionBstackIntance, calcInstance.parse(expressionB),
-          "parse should convert even more compilcated stacks");
-    } catch (InvalidExpressionException e) {
-      fail("valid expressions shouldn't throw an exception" + e.toString());
-    }
-
-  }
+  
 
   @Test
   void testEvaluate() {
