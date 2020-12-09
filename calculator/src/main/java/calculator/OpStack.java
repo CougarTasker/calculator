@@ -54,4 +54,17 @@ public class OpStack {
     return opStack.size() == 0;
   }
 
+  /**
+   * get the element on the top of the stack without removing it.
+   * 
+   * @return the element on the top of the stack
+   */
+  public Symbol top() throws EmptyStackException {
+    try {
+      return opStack.top().getSymbol();
+    } catch (BadTypeException e) {
+      // this block cannot be reached since this class does not support adding other types of data
+      return null;
+    }
+  }
 }

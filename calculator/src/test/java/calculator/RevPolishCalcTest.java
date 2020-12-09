@@ -16,7 +16,7 @@ class RevPolishCalcTest {
   String expressionB;
   float expressionAanswer;
   float expressionBanswer;
-  public static final int MAX = 100000;
+  public static final int MAX = 10000;
 
   @BeforeEach
   void before() {
@@ -103,5 +103,16 @@ class RevPolishCalcTest {
     assertThrows(CalculationException.class,() -> {
       calcInstance.evaluate("1 0 /");
     },"you cannot divide by zero");
+  }
+  @Test 
+  void testNewEvaluate() {
+    try {
+      assertEquals(expressionAanswer, calcInstance.evaluate(Tokenizer.parse(expressionA)), 0.001,
+          "evaluate should return the correct value for the given expression");
+      assertEquals(expressionBanswer, calcInstance.evaluate(Tokenizer.parse(expressionB)), 0.001,
+          "evaluate should return the correct value for complex expressions too");
+    } catch (CalculationException e) {
+      fail("valid expressions shouldn't throw an exception" + e.toString());
+    }
   }
 }

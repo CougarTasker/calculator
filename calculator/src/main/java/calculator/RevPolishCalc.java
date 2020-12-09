@@ -10,8 +10,7 @@ import java.util.LinkedList;
  *
  */
 public class RevPolishCalc {
-
-
+  
   /**
    * When called on a valid Reverse polish expression this method will calculate is result.
    * 
@@ -19,7 +18,18 @@ public class RevPolishCalc {
    * @return the value calculated from the expression.
    * @throws CalculationException thrown if there is an error during the calculation.
    */
-  public float evaluate(String what) throws CalculationException {
+  public float evaluate(String what) throws InvalidExpressionException, CalculationException {
+    return evaluate(Tokenizer.parse(what));
+  }
+
+  /**
+   * When called on a valid Reverse polish expression this method will calculate is result.
+   * 
+   * @param input The expression to be evaluated. This is a linked list of entries.
+   * @return the value calculated from the expression.
+   * @throws CalculationException thrown if there is an error during the calculation.
+   */
+  public float evaluate(LinkedList<Entry> input) throws CalculationException {
     // this method uses two stacks the input is parsed from the string and the output.
     // numbers are just moved across
     // when a operator is found its preceding numbers are taken from the output i.e in 1 1 + that
@@ -29,7 +39,7 @@ public class RevPolishCalc {
     // when all input has been consumed and there hasn't been an issue the final value on the output
     // stack is returned.
 
-    LinkedList<Entry> input = Tokenizer.parse(what);
+
     NumStack output = new NumStack();
     while (input.size() > 0) {
       Entry cur;
@@ -45,7 +55,7 @@ public class RevPolishCalc {
         try {
           float b = output.pop();
           float a = output.pop();
-          output.push(calc(cur.getSymbol(), a, b));
+          output.push(cur.getSymbol().calc(a, b));
         } catch (EmptyStackException e) {
           throw new CalculationException("unballanced expression. not enough operands.");
         } catch (BadTypeException e) {
@@ -71,29 +81,8 @@ public class RevPolishCalc {
     }
   }
 
-  private float calc(Symbol s, float a, float b) throws CalculationException {
-    switch (s) {
-      case DIVIDE:
-        if (b == 0) {
-          throw new CalculationException("cannot divide by zero");
-        }
-        return a / b;
-      case MINUS:
-        return a - b;
-      case PLUS:
-        return a + b;
-      case TIMES:
-        return a * b;
-      case RIGHT_BRACKET:
-      case LEFT_BRACKET:
-        throw new CalculationException("parentheses are not required. Are you in the right mode?");
-      case INVALID:
-        throw new CalculationException("invalid symbol in expression");
-      default:
-        throw new CalculationException(
-            "unimplemented symbol '" + s.toString() + "' in expression.");
-    }
-  }
+
+
 }
 
 

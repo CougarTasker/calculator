@@ -80,4 +80,23 @@ class OpStackTest {
       }
     }, "The stack should return quickly");
   }
+  @Test
+  void testTop() throws EmptyStackException {
+    stackInstance.push(Symbol.PLUS);
+    assertEquals(Symbol.PLUS, stackInstance.top(), "top should return the last element added");
+    stackInstance.push(Symbol.MINUS);
+    assertEquals(Symbol.MINUS, stackInstance.top(), "top should update after push");
+    stackInstance.push(Symbol.TIMES);
+
+    assertEquals(Symbol.TIMES, stackInstance.top(), "top should return the last element");
+    stackInstance.pop();
+    assertEquals(Symbol.MINUS, stackInstance.top(),
+        "top should return elements in the reverse order");
+    stackInstance.pop();
+    assertEquals(Symbol.PLUS, stackInstance.top(),
+        "top should return elements in the reverse order");
+    stackInstance.pop();
+    assertThrows(EmptyStackException.class, () -> stackInstance.top(),
+        "after pushing and top an empty stack should still throw and exception");
+  }
 }

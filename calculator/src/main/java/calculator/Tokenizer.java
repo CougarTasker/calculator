@@ -224,7 +224,7 @@ public class Tokenizer {
       new Token(s -> new Entry(Float.parseFloat(s)), number),
       // each of the symbols require there own token
       new Token(Symbol.PLUS, '+'), new Token(Symbol.MINUS, '-'), new Token(Symbol.TIMES, '*'),
-      new Token(Symbol.DIVIDE, '/'),
+      new Token(Symbol.DIVIDE, '/'), new Token(Symbol.POWER, '^'),
       // whitespace characters should be recognised otherwise it would throw an error but they are
       // invalid so will be ignored
       new Token(Symbol.INVALID, new Transition(START, c -> Character.isWhitespace(c), SUCCESS[0])),

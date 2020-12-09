@@ -74,4 +74,15 @@ class TokenizerTest {
     assertEquals(bracketTest, Tokenizer.parse(testText),
         "tokenizer should parse altenate types of brackets");
   }
+  @Test
+  void testOperators() throws InvalidExpressionException{
+    LinkedList<Entry> bracketTest = new LinkedList<Entry>();
+    bracketTest.add(new Entry(Symbol.PLUS));
+    bracketTest.add(new Entry(Symbol.MINUS));
+    bracketTest.add(new Entry(Symbol.DIVIDE));
+    bracketTest.add(new Entry(Symbol.TIMES));
+    bracketTest.add(new Entry(Symbol.POWER));
+    assertEquals(bracketTest, Tokenizer.parse("+-/*^"),
+        "tokenizer should be able to parse all these operators");
+  }
 }
