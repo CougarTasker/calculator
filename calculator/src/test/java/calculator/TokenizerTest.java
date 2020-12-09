@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class TokenizerTest {
-  Tokenizer tokenizerInstance = null;
   String testA = "1 1 1";
   LinkedList<Entry> testAinstance;
   String testB = "1 + 2 + 3";
@@ -17,7 +16,6 @@ class TokenizerTest {
 
   @BeforeEach
   void before() {
-    tokenizerInstance = new Tokenizer();
     testAinstance = new LinkedList<Entry>();
     testAinstance.add(new Entry(1));
     testAinstance.add(new Entry(1));

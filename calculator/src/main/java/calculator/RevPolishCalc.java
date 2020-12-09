@@ -3,25 +3,13 @@ package calculator;
 import java.util.LinkedList;
 
 /**
- * A class to parse and evaluate Reverse polish expressions. This class implements the evaluate
- * interface just a single method that takes in a single string an calculates its value.
+ * A class to parse and evaluate reverse polish (postfix) expressions. This class is a Tokenizer, it
+ * contains a method evaluate that will do all the parsing and evaluation and return the result.
  * 
  * @author Cougar Tasker
  *
  */
-public class RevPolishCalc {
-  
-  /**
-   * When called on a valid Reverse polish expression this method will calculate is result.
-   * 
-   * @param what The expression to be evaluated.
-   * @return the value calculated from the expression.
-   * @throws CalculationException thrown if there is an error during the calculation.
-   */
-  public float evaluate(String what) throws InvalidExpressionException, CalculationException {
-    return evaluate(Tokenizer.parse(what));
-  }
-
+public class RevPolishCalc extends Tokenizer {
   /**
    * When called on a valid Reverse polish expression this method will calculate is result.
    * 

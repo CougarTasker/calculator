@@ -3,24 +3,23 @@ package calculator;
 import java.util.LinkedList;
 
 /**
- * A class to parse and evaluate regular infix expressions. This class implements the evaluate
- * interface just a single method that takes in a single string an calculates its value.
+ * A class to parse and evaluate regular infix expressions. This class is a Tokenizer, it contains a
+ * method evaluate that will do all the parsing and evaluation and return the result.
  * 
  * @author Cougar Tasker
  *
  */
-public class StandardCalc {
+public class StandardCalc extends Tokenizer {
   RevPolishCalc reversePolishCalc = new RevPolishCalc();
 
   /**
    * When called on a valid algebraic, infix, expression this method will calculate its result.
    * 
-   * @param what The expression to be evaluated.
+   * @param input The expression to be evaluated as a set of entries
    * @return the value calculated from the expression.
    * @throws CalculationException thrown if there is an error during the calculation.
    */
-  public float evaluate(String what) throws CalculationException {
-    LinkedList<Entry> input = Tokenizer.parse(what);
+  public float evaluate(LinkedList<Entry> input) throws CalculationException {
     return reversePolishCalc.evaluate(shuntingYard(input));
 
   }

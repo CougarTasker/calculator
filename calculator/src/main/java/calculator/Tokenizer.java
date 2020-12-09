@@ -8,22 +8,22 @@ import java.util.function.Predicate;
 import javafx.util.Pair;
 
 /**
- * This is a class designed to separate a string into individual tokens. This class will separate an
- * expression string into {@link Entry entries} of symbols and numbers where possible. This class
- * Requires a FSM to test the input and a function to produce the given entry. null entries will be
- * Ignored.
+ * this class is designed to be extended by classes that intend to parse and evaluate and expression
+ * string. This is a class will separate a string into individual tokens before giving them to the
+ * individual implementation of evaluate.This class will separate an expression string into
+ * {@link Entry entries} of symbols and numbers where possible. null entries will be Ignored.
  * 
  * @author Cougar Tasker
  *
  */
-public class Tokenizer {
+public abstract class Tokenizer {
   // standardized states for the fsm to use
   private static final int[] SUCCESS = {-2, -3, -4, -5, -6};
   private static final int START = 0;
   private static final int FAIL = -1;
 
   // simple container class for transitions to simplify describing fsm's
-  static class Transition {
+  private static class Transition {
     public int from;
     public Predicate<Character> acc;
     public int to;
@@ -48,7 +48,7 @@ public class Tokenizer {
    * @author Cougar Tasker
    *
    */
-  static class Token {
+  private static class Token {
     // mutable state
     private static final HashMap<Symbol, Entry> SYMBOL_MAP = new HashMap<Symbol, Entry>();
 
@@ -246,7 +246,7 @@ public class Tokenizer {
    *         be the last token in the string.
    * @throws InvalidExpressionException if there are unrecognisable tokens within the expression.
    */
-  public static LinkedList<Entry> parse(String input) throws InvalidExpressionException {
+  static LinkedList<Entry> parse(String input) throws InvalidExpressionException {
     int base = 0;
     LinkedList<Entry> out = new LinkedList<Entry>();
     Pair<Integer, Entry> best; // will record the longest token for each round
@@ -275,4 +275,31 @@ public class Tokenizer {
     }
     return out;
   }
+
+  /**
+   * When called on a valid expression string its value will be calculated. However on an invalid
+   * expression a calculation exception will be thrown. The syntax of the expression is dependent on
+   * the individual implementations of this class.
+   * 
+   * @param what The expression to be evaluated.
+   * @return the value calculated from the expression.
+   * @throws CalculationException thrown if there is an error during the calculation.
+   */
+  public float evaluate(String what) throws CalculationException {
+    return this.evaluate(parse(what));
+  }
+
+  /**
+   * When called this will reduce the list of entry down to a single result. this is the subclasses
+   * individual interpretation of evaluate. the result of this method must be the same for the same
+   * input every time. it must always throw a calculation exception if if a calculation cannot be
+   * performed
+   * 
+   * @param input the set of entries in the expression in order. The parser will only return entrys
+   *        of type symbol and number
+   * @return the number that this expression represents.
+   * @throws CalculationException when there has been an error during computation. i.e divide by
+   *         zero
+   */
+  protected abstract float evaluate(LinkedList<Entry> input) throws CalculationException;
 }
