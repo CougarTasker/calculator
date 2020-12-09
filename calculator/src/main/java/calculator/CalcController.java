@@ -1,5 +1,6 @@
 package calculator;
 
+import java.util.function.Consumer;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -12,9 +13,18 @@ import javafx.stage.Stage;
  */
 public class CalcController extends Application {
   /**
+   * The model that does all of the user's processing.
+   */
+  CalcModel model = new CalcModel();
+  /**
    * The view that the user is interacting with.
    */
   ViewInterface view = null;
+
+  /**
+   * The operation type of the calculator. This is the syntax used by the calculator.
+   */
+  OpType type = OpType.INFIX;
 
   /**
    * Starts the calculator program. This method will determine weather a console has been attached
@@ -74,22 +84,30 @@ public class CalcController extends Application {
     GuiView view = new GuiView();
     view.start(primaryStage);
     this.view = view;
+    addViewObservers();
+  }
+
+  private void addViewObservers() {
+    view.addCalcObserver(() -> this.calculate());
+    view.addTypeObserver(t -> this.expressionType(t));
   }
 
   /**
    * Called when there is a change of expression type.
    */
-  public void expressionType() {
-
+  public void expressionType(OpType t) {
+    this.type = t;
   }
 
   /**
    * Called when a calculation is required.
    */
   public void calculate() {
-
+    try {
+      view.setAnswer(Float.toString(model.evaluate(view.getExpression(), type)));
+    } catch (CalculationException e) {
+      view.alertCalculationError(e);
+    }
   }
-
-
 
 }

@@ -63,6 +63,8 @@ public class GuiView extends Application implements ViewInterface {
 
   @FXML
   void userInputkeyPress(KeyEvent event) {
+    errorLabel.setText("");
+    // if the expression has change the error is no longer applicable
     if (userInput.getText().length() == 0) {
       userOutput.setText("2");
     } else {

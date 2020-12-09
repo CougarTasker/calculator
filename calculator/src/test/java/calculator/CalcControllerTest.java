@@ -12,7 +12,5 @@ class CalcControllerTest {
   }
   @Test
   void testMethods() {
-    controllerInstance.expressionType();
-    controllerInstance.calculate();
   }
 }
