@@ -13,11 +13,11 @@
 .text-input[text != ""] {
     -fx-prompt-text-fill: transparent;
 }
-.errorLabel[text != ""]~.text-input{
+.error{
   -fx-background-color:
         #DD0000,
         red,
-        #AA101022,
+        #DDAAAA09,
         linear-gradient(from 0px 0px to 0px 5px, derive(-fx-control-inner-background, -9%), -fx-control-inner-background);
 }
 

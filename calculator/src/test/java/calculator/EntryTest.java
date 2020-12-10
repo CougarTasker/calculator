@@ -16,32 +16,32 @@ class EntryTest {
   @BeforeEach
   void before() {
     // 01.5
-    entryNumberInstance = new Entry(ENTRY_NUMBER);
-    entrySymbolInstance = new Entry(ENTRY_SYMBOL);
-    entryStringInstance = new Entry(ENTRY_STRING);
-    // added this to simplify the tests 
+    entryNumberInstance = Entry.getEntry(ENTRY_NUMBER);
+    entrySymbolInstance = Entry.getEntry(ENTRY_SYMBOL);
+    entryStringInstance = Entry.getEntry(ENTRY_STRING);
+    // added this to simplify the tests
   }
 
   @Test
   void testConstructor() {
     // 01
-    new Entry((float) 2.5);
-    new Entry((float) 1.2);
-    new Entry((float) -2.5);
-    new Entry((float) 0);
+    Entry.getEntry((float) 2.5);
+    Entry.getEntry((float) 1.2);
+    Entry.getEntry((float) -2.5);
+    Entry.getEntry((float) 0);
     for (Symbol val : Symbol.values()) {
-      new Entry(val);
+      Entry.getEntry(val);
     }
-    new Entry("");
-    new Entry("abc");
-    new Entry("123");
+    Entry.getEntry("");
+    Entry.getEntry("abc");
+    Entry.getEntry("123");
     // wrote a constructor that just accepts each of the three different types
     // faked storing the data
   }
 
   @Test
   void testGetType() {
-    // 02 
+    // 02
     assertEquals(entryNumberInstance.getType(), Type.NUMBER,
         "an entry constructed with a number should have the type of number");
     assertEquals(entrySymbolInstance.getType(), Type.SYMBOL,
@@ -57,14 +57,14 @@ class EntryTest {
     // 03
     assertEquals(entryNumberInstance.getValue(), ENTRY_NUMBER,
         "the returned value should be what was stored");
-    // added number attribute to constructor and class 
-    // created function that returns this attribute 
+    // added number attribute to constructor and class
+    // created function that returns this attribute
     assertThrows(BadTypeException.class, () -> entrySymbolInstance.getValue(),
         "cant get a number from a symbol entry");
     assertThrows(BadTypeException.class, () -> entryStringInstance.getValue(),
         "cant get a number from a string entry");
-    //added a check that the type of the class = number 
-    //created bad type exception 
+    // added a check that the type of the class = number
+    // created bad type exception
   }
 
   @Test
@@ -76,7 +76,7 @@ class EntryTest {
         "cant get a symbol from a number entry");
     assertThrows(BadTypeException.class, () -> entryStringInstance.getSymbol(),
         "cant get a symbol from a string entry");
-    // same as 03 just with the symbol type 
+    // same as 03 just with the symbol type
   }
 
   @Test
@@ -88,7 +88,7 @@ class EntryTest {
         "cant get a string from a symbol entry");
     assertThrows(BadTypeException.class, () -> entryNumberInstance.getString(),
         "cant get a string from a number entry");
-    // same as 03 just with the string type 
+    // same as 03 just with the string type
   }
 
   @Test
@@ -97,7 +97,7 @@ class EntryTest {
     assertFalse(entryStringInstance.equals(entryNumberInstance),
         "diffrent entries should not be equal");
     assertTrue(entryStringInstance.equals(entryStringInstance), "same entries should be equal");
-    assertTrue(entryStringInstance.equals(new Entry(ENTRY_STRING)),
+    assertTrue(entryStringInstance.equals(Entry.getEntry(ENTRY_STRING)),
         "diffrent entries with the same value should be equal");
     // auto generated equals stub and tweaked it to work with this class.
   }
@@ -111,6 +111,11 @@ class EntryTest {
         "strings should be properly converted");
     assertEquals(entrySymbolInstance.toString(), ENTRY_SYMBOL.toString(),
         "symbols should be properly converted");
-    //used the switch statement to return the right value converted to string.
+    // used the switch statement to return the right value converted to string.
+  }
+
+  @Test 
+  void testSameSymbol(){
+    assertSame(Entry.getEntry(Symbol.INVALID),Entry.getEntry(Symbol.INVALID));
   }
 }

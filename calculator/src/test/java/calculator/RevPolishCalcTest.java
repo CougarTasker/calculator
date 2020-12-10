@@ -24,20 +24,20 @@ class RevPolishCalcTest {
     expressionA = " 1 2 +";
     expressionAanswer = 3;
     expressionAstackIntance = new Stack();
-    expressionAstackIntance.push(new Entry(Symbol.PLUS));
-    expressionAstackIntance.push(new Entry(2));
-    expressionAstackIntance.push(new Entry(1));
+    expressionAstackIntance.push(Entry.getEntry(Symbol.PLUS));
+    expressionAstackIntance.push(Entry.getEntry(2));
+    expressionAstackIntance.push(Entry.getEntry(1));
     expressionB = " 1 2 + 3 * 5 4 - +";
     expressionBstackIntance = new Stack();
-    expressionBstackIntance.push(new Entry(Symbol.PLUS));
-    expressionBstackIntance.push(new Entry(Symbol.MINUS));
-    expressionBstackIntance.push(new Entry(4));
-    expressionBstackIntance.push(new Entry(5));
-    expressionBstackIntance.push(new Entry(Symbol.TIMES));
-    expressionBstackIntance.push(new Entry(3));
-    expressionBstackIntance.push(new Entry(Symbol.PLUS));
-    expressionBstackIntance.push(new Entry(2));
-    expressionBstackIntance.push(new Entry(1));
+    expressionBstackIntance.push(Entry.getEntry(Symbol.PLUS));
+    expressionBstackIntance.push(Entry.getEntry(Symbol.MINUS));
+    expressionBstackIntance.push(Entry.getEntry(4));
+    expressionBstackIntance.push(Entry.getEntry(5));
+    expressionBstackIntance.push(Entry.getEntry(Symbol.TIMES));
+    expressionBstackIntance.push(Entry.getEntry(3));
+    expressionBstackIntance.push(Entry.getEntry(Symbol.PLUS));
+    expressionBstackIntance.push(Entry.getEntry(2));
+    expressionBstackIntance.push(Entry.getEntry(1));
     expressionBanswer = 10;
 
   }

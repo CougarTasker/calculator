@@ -1,8 +1,5 @@
 package calculator;
 
-import java.util.function.BiFunction;
-import java.util.function.BinaryOperator;
-
 /**
  * the enum of non-number tokens possible in an expression.
  * 
@@ -13,14 +10,45 @@ public enum Symbol {
   // brackets and invalid aren't operators so have no function
   LEFT_BRACKET, RIGHT_BRACKET, INVALID,
   // lowest precedence
-  PLUS(2, (a, b) -> a + b, true), MINUS(2, (a, b) -> a - b, true),
+  PLUS(2, true) {
+    @Override
+    float operation(float a, float b) throws CalculationException {
+      return a + b;
+    }
+  },
+  MINUS(2, true) {
+    @Override
+    float operation(float a, float b) throws CalculationException {
+      return a - b;
+    }
+  },
   // middle precedence
-  TIMES(3, (a, b) -> a * b, true), DIVIDE(3, (a, b) -> b == 0 ? "Cannot divide by zero" : null,
-      (a, b) -> a / b, true),
+  TIMES(3, true) {
+    @Override
+    float operation(float a, float b) throws CalculationException {
+      return a * b;
+    }
+  },
+  DIVIDE(3, true) {
+    @Override
+    float operation(float a, float b) throws CalculationException {
+      if (b == 0) {
+        throw new CalculationException("cannot divide by zero");
+      }
+      return a / b;
+    }
+  },
   // Highest precedence
-  POWER(4, (a,
-      b) -> Double.compare(Math.pow(a, b), Double.NaN) == 0 ? "Result must be a real number" : null,
-      (a, b) -> (float) Math.pow(a, b), false);
+  POWER(4, false) {
+    @Override
+    float operation(float a, float b) throws CalculationException {
+      float f = (float) Math.pow(a, b);
+      if (Float.isNaN(f)) {
+        throw new CalculationException("result must be a real number");
+      }
+      return f;
+    }
+  };
 
   /**
    * When called returns weather a given symbol is an operator.
@@ -42,11 +70,16 @@ public enum Symbol {
    *         by zero.
    */
   public float calc(float a, float b) throws CalculationException {
-    if (this.test.apply(a, b) == null) {
-      return this.function.apply(a, b);
+    float out = operation(a, b);
+    if (Float.isFinite(out) && !Float.isNaN(out)) {
+      return out;
     } else {
-      throw new CalculationException(this.test.apply(a, b));
+      throw new CalculationException("arthmetic overflow");
     }
+  }
+
+  float operation(float a, float b) throws CalculationException {
+    throw new CalculationException(toString() + " operator calc operation not impemented");
   }
 
   /**
@@ -70,30 +103,18 @@ public enum Symbol {
   }
 
   private final int precedence;
-  private final BinaryOperator<Float> function;
-  private final BiFunction<Float, Float, String> test;
   private final boolean leftAssociative;
 
   private Symbol() {
     this.precedence = 0;
-    this.function = null;
     this.leftAssociative = true;
-    this.test = (a, b) -> null;
   }
 
-  private Symbol(int precedence, BinaryOperator<Float> function, boolean leftAssociative) {
+  private Symbol(int precedence, boolean leftAssociative) {
     this.precedence = precedence;
-    this.function = function;
     this.leftAssociative = leftAssociative;
-    this.test = (a, b) -> null;
   }
 
-  private Symbol(int precedence, BiFunction<Float, Float, String> test,
-      BinaryOperator<Float> function, boolean leftAssociative) {
-    this.precedence = precedence;
-    this.function = function;
-    this.leftAssociative = leftAssociative;
-    this.test = test;
-  }
+
 
 }

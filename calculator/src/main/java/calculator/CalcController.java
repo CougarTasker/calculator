@@ -1,6 +1,6 @@
 package calculator;
 
-import java.util.function.Consumer;
+import java.text.DecimalFormat;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -99,12 +99,25 @@ public class CalcController extends Application {
     this.type = t;
   }
 
+  private static DecimalFormat mediumSized =
+      new DecimalFormat("###,###,###.####;-###,###,###.####");
+  private static DecimalFormat smallAndLarge = new DecimalFormat("#.######E0##;-#.######E0##");
+
   /**
    * Called when a calculation is required.
    */
   public void calculate() {
     try {
-      view.setAnswer(Float.toString(model.evaluate(view.getExpression(), type)));
+      float val = model.evaluate(view.getExpression(), type);
+      float abs = Math.abs(val);
+      String out;
+      if (abs < 999999999 && abs >= 0.001) {
+        out = mediumSized.format(val);
+      } else {
+        out = smallAndLarge.format(val) + ")";
+        out = out.replace("E", "*10^(");
+      }
+      view.setAnswer(out);
     } catch (CalculationException e) {
       view.alertCalculationError(e);
     }

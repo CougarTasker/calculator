@@ -26,7 +26,7 @@ public class StrStack {
    * @param str the string to be added.
    */
   public void push(String str) {
-    strStack.push(new Entry(str));
+    strStack.push(Entry.getEntry(str));
   }
 
   /**

@@ -13,10 +13,10 @@ class StackTest {
   @BeforeEach
   void before() {
     stackInstance = new Stack();
-    entryInstance = new Entry(Symbol.DIVIDE);
+    entryInstance = Entry.getEntry(Symbol.DIVIDE);
     entryInstances = new Entry[100000];
     for (int i = 0; i < entryInstances.length; i++) {
-      entryInstances[i] = new Entry((float) i);
+      entryInstances[i] = Entry.getEntry((float) i);
     }
   }
 

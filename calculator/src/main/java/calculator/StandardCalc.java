@@ -39,7 +39,7 @@ public class StandardCalc extends Tokenizer {
               // operator
               try {
                 while (shouldBeRemoved(ops, s)) {
-                  out.add(new Entry(ops.pop()));
+                  out.add(Entry.getEntry(ops.pop()));
                 }
                 ops.push(s);
               } catch (EmptyStackException e1) {
@@ -53,7 +53,7 @@ public class StandardCalc extends Tokenizer {
               } else {
                 try {
                   while (ops.top() != Symbol.LEFT_BRACKET) {
-                    out.add(new Entry(ops.pop()));
+                    out.add(Entry.getEntry(ops.pop()));
                   }
                   if (ops.top() == Symbol.LEFT_BRACKET) {
                     ops.pop();
@@ -90,11 +90,18 @@ public class StandardCalc extends Tokenizer {
     }
     while (!ops.isEmpty()) {
       try {
-        out.add(new Entry(ops.pop()));
+        if (ops.top() == Symbol.LEFT_BRACKET) {
+          throw new CalculationException("unbalanced brackets");
+        }
+        out.add(Entry.getEntry(ops.pop()));
       } catch (EmptyStackException e1) {
         throw new CalculationException("unknown error");
         // we just checked the size of the ops it can't be empty
       }
+    }
+    if (out.size() == 0) {
+      //since we remove brackets we must check were not giving an empty expression.
+      throw new CalculationException("expression only contains brackets");
     }
     return out;
   }

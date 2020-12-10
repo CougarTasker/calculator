@@ -50,28 +50,7 @@ public abstract class Tokenizer {
    */
   private static class Token {
     // mutable state
-    private static final HashMap<Symbol, Entry> SYMBOL_MAP = new HashMap<Symbol, Entry>();
 
-    /**
-     * Get a Entry that contains the symbol s. This method will return the same entry for the same
-     * symbol. this means:
-     * <ul>
-     * <li>direct comparisons can be made between symbol entries</li>
-     * <li>faster instantiation</li>
-     * <li>capped memory usage</li>
-     * </ul>
-     * 
-     * @param s the symbol you want the corresponding entry for.
-     * @return
-     */
-    public static Entry getSymbolEntry(Symbol s) {
-      Entry e = SYMBOL_MAP.get(s);
-      if (e == null) {
-        e = new Entry(s);
-        SYMBOL_MAP.put(s, e);
-      }
-      return e;
-    }
 
 
     // unmutable state
@@ -100,7 +79,7 @@ public abstract class Tokenizer {
      * @param c the character that this token recognises.
      */
     private Token(Symbol val, char c) {
-      this(s -> getSymbolEntry(val), new Transition(START, c, SUCCESS[0]));
+      this(s -> Entry.getEntry(val), new Transition(START, c, SUCCESS[0]));
     }
 
     /**
@@ -111,7 +90,7 @@ public abstract class Tokenizer {
      * @param c the character that this token recognises.
      */
     private Token(Symbol val, Transition... ts) {
-      this(s -> getSymbolEntry(val), ts);
+      this(s -> Entry.getEntry(val), ts);
     }
 
 
@@ -219,22 +198,24 @@ public abstract class Tokenizer {
   /**
    * An array of all tokens that are recognised.
    */
-  public static final Token[] tokens = new Token[] {
-      // recognise numbers with the number fsm
-      new Token(s -> new Entry(Float.parseFloat(s)), number),
-      // each of the symbols require there own token
-      new Token(Symbol.PLUS, '+'), new Token(Symbol.MINUS, '-'), new Token(Symbol.TIMES, '*'),
-      new Token(Symbol.DIVIDE, '/'), new Token(Symbol.POWER, '^'),
+  public static final Token[][] tokens = new Token[][] {
       // whitespace characters should be recognised otherwise it would throw an error but they are
       // invalid so will be ignored
-      new Token(Symbol.INVALID, new Transition(START, c -> Character.isWhitespace(c), SUCCESS[0])),
+      {new Token(Symbol.INVALID,
+          new Transition(START, c -> Character.isWhitespace(c), SUCCESS[0]))},
+      // recognise numbers with the number fsm
+      {new Token(s -> Entry.getEntry(Float.parseFloat(s)), number), new Token(Symbol.MINUS, '-')},
+      // each of the symbols require there own token
+      {new Token(Symbol.PLUS, '+'), new Token(Symbol.TIMES, '*'), new Token(Symbol.DIVIDE, '/'),
+          new Token(Symbol.POWER, '^')},
+
       // different types of brackets should be accepted to make it easer to understand nesting.
-      new Token(Symbol.LEFT_BRACKET, '('), new Token(Symbol.RIGHT_BRACKET, ')'),
-      new Token(Symbol.LEFT_BRACKET, '['), new Token(Symbol.RIGHT_BRACKET, ']')};
+      {new Token(Symbol.LEFT_BRACKET, '('), new Token(Symbol.RIGHT_BRACKET, ')'),
+          new Token(Symbol.LEFT_BRACKET, '['), new Token(Symbol.RIGHT_BRACKET, ']')}};
 
 
   // save a reference to invalid so we don't need to look it up each time
-  private static final Entry INVALID = Token.getSymbolEntry(Symbol.INVALID);
+  private static final Entry INVALID = Entry.getEntry(Symbol.INVALID);
 
   /**
    * When called on a valid input expression this method will separate it into individual
@@ -247,31 +228,52 @@ public abstract class Tokenizer {
    * @throws InvalidExpressionException if there are unrecognisable tokens within the expression.
    */
   static LinkedList<Entry> parse(String input) throws InvalidExpressionException {
+    if (input.isEmpty()) {
+      throw new InvalidExpressionException("cannot evaluate an empty expression");
+    }
     int base = 0;
     LinkedList<Entry> out = new LinkedList<Entry>();
-    Pair<Integer, Entry> best; // will record the longest token for each round
+    boolean fistComeFirstServed = true;
+    Pair<Integer, Entry> cur = null;
     while (base < input.length()) { // while there are still unparsed characters
-      best = new Pair<Integer, Entry>(0, null);
-      for (Token t : tokens) {
-        // check each token for the longest one. we want to do this in the least checks
-        Pair<Integer, Entry> cur = t.accept(input, base);
-        // save the result we will need it a couple of times
-        // another approach would be to stop after the first match. then sort the tokens in order of
-        // priority. but i've already spent wayyyy to much time on this.
-        if (cur.getKey() > best.getKey()) {
-          best = cur;
-          // if this is a new longest token we will accept it
+      fistComeFirstServed = cur == null || cur.getValue().getType() != Type.NUMBER;
+      for (Token[] level : tokens) {
+        // for each level
+        if (fistComeFirstServed) {
+          // loop forwards
+          for (int i = 0; i < level.length; i++) {
+            // for each token in each level
+            cur = level[i].accept(input, base);
+            if (cur.getKey() > 0) {
+              break;
+            }
+          }
+        } else {
+          // loop backwards
+          for (int i = level.length - 1; i >= 0; i--) {
+            // for each token in each level
+            cur = level[i].accept(input, base);
+            if (cur.getKey() > 0) {
+              break;
+            }
+          }
+        }
+        if (cur.getKey() > 0) {
+          break;
         }
       }
-      if (best.getKey() == 0) {
+      if (cur.getKey() == 0) {
         // if there was no match for the flowing characters then then this expression is wrong
         throw new InvalidExpressionException("unrecognised symbol in expression");
       }
       // move forward through the string
-      base += best.getKey();
-      if (INVALID != best.getValue()) { // ignore any symbol that isn'tt relevant
-        out.add(best.getValue());
+      base += cur.getKey();
+      if (INVALID != cur.getValue()) { // ignore any symbol that isn'tt relevant
+        out.add(cur.getValue());
       }
+    }
+    if (out.size() == 0) {
+      throw new InvalidExpressionException("cannot evaluate a blank expression");
     }
     return out;
   }
@@ -286,7 +288,11 @@ public abstract class Tokenizer {
    * @throws CalculationException thrown if there is an error during the calculation.
    */
   public float evaluate(String what) throws CalculationException {
-    return this.evaluate(parse(what));
+    float out = this.evaluate(parse(what));
+    if (!Float.isFinite(out)) {
+      throw new CalculationException("arthmetic overflow");
+    }
+    return out;
   }
 
   /**

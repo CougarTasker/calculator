@@ -25,7 +25,7 @@ public class OpStack {
    * @param i the operator symbol to be added.
    */
   public void push(Symbol i) {
-    opStack.push(new Entry(i));
+    opStack.push(Entry.getEntry(i));
   }
 
   /**

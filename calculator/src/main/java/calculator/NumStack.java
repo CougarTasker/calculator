@@ -25,7 +25,7 @@ public class NumStack {
    * @param i floating point number to be stored in the stack.
    */
   public void push(float i) {
-    this.numStack.push(new Entry(i));
+    this.numStack.push(Entry.getEntry(i));
   }
 
   /**

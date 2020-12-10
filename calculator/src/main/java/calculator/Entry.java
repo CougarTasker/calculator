@@ -1,5 +1,7 @@
 package calculator;
 
+import java.util.HashMap;
+
 /**
  * This is the class to encapsulate the data that will be stored in a stack.
  * 
@@ -11,23 +13,39 @@ public class Entry {
   private Symbol other;
   private String str;
   private Type type;
+  private static final HashMap<Symbol, Entry> SYMBOL_MAP = new HashMap<Symbol, Entry>();
 
   /**
    * Create a type: number entry that stores a floating point value.
    * 
    * @param value the value to be stored.
+   * @return
    */
-  Entry(float value) {
+  public static Entry getEntry(float value) {
+    return new Entry(value);
+  }
+
+  private Entry(float value) {
     this.number = value;
     this.type = Type.NUMBER;
   }
 
   /**
-   * Create a type: symbol entry that stores a symbol enum value.
+   * Create a type: symbol entry that stores a symbol enum value. this method will return the same
+   * entry for the same symbol type
    * 
    * @param which the symbol to be stored.
    */
-  Entry(Symbol which) {
+  public static Entry getEntry(Symbol which) {
+    Entry e = SYMBOL_MAP.get(which);
+    if (e == null) {
+      e = new Entry(which);
+      SYMBOL_MAP.put(which, e);
+    }
+    return e;
+  }
+
+  private Entry(Symbol which) {
     this.other = which;
     this.type = Type.SYMBOL;
   }
@@ -37,7 +55,11 @@ public class Entry {
    * 
    * @param str the string to be stored.
    */
-  Entry(String str) {
+  public static Entry getEntry(String str) {
+    return new Entry(str);
+  }
+
+  private Entry(String str) {
     this.str = str;
     this.type = Type.STRING;
   }
@@ -146,6 +168,7 @@ public class Entry {
 
   /**
    * get a String representation of the entry based on its value.
+   * 
    * @return the value of the entry for its given type.
    */
   @Override

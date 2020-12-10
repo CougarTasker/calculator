@@ -52,24 +52,20 @@ public class GuiView extends Application implements ViewInterface {
   @FXML
   private Label errorLabel;
 
-
   @FXML
   void calculateMouseClicked(MouseEvent event) {
-    alertCalculationError(new CalculationException("not implemented yet"));
     calcObservers.forEach((Runnable observer) -> {
       observer.run();
     });
+    userInput.requestFocus();
+    userInput.positionCaret(userInput.lengthProperty().get());
   }
 
   @FXML
   void userInputkeyPress(KeyEvent event) {
     errorLabel.setText("");
+    userInput.getStyleClass().remove("error");
     // if the expression has change the error is no longer applicable
-    if (userInput.getText().length() == 0) {
-      userOutput.setText("2");
-    } else {
-      userOutput.setText("");
-    }
     if (event.getCode() == KeyCode.ENTER) {
       calculateMouseClicked(null);
     }
@@ -146,7 +142,10 @@ public class GuiView extends Application implements ViewInterface {
    */
   @Override
   public void alertCalculationError(CalculationException e) {
+    userInput.getStyleClass().add("error");
+    userOutput.setText("");
     errorLabel.setText(e.getMessage());
+    
     // show the error
   }
 }

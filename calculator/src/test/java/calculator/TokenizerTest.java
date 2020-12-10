@@ -3,7 +3,6 @@ package calculator;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.LinkedList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,16 +16,16 @@ class TokenizerTest {
   @BeforeEach
   void before() {
     testAinstance = new LinkedList<Entry>();
-    testAinstance.add(new Entry(1));
-    testAinstance.add(new Entry(1));
-    testAinstance.add(new Entry(1));
+    testAinstance.add(Entry.getEntry(1));
+    testAinstance.add(Entry.getEntry(1));
+    testAinstance.add(Entry.getEntry(1));
 
     testBinstance = new LinkedList<Entry>();
-    testBinstance.add(new Entry(1));
-    testBinstance.add(new Entry(Symbol.PLUS));
-    testBinstance.add(new Entry(2));
-    testBinstance.add(new Entry(Symbol.PLUS));
-    testBinstance.add(new Entry(3));
+    testBinstance.add(Entry.getEntry(1));
+    testBinstance.add(Entry.getEntry(Symbol.PLUS));
+    testBinstance.add(Entry.getEntry(2));
+    testBinstance.add(Entry.getEntry(Symbol.PLUS));
+    testBinstance.add(Entry.getEntry(3));
 
   }
 
@@ -55,10 +54,10 @@ class TokenizerTest {
   void testFloatNumbers() throws InvalidExpressionException {
     LinkedList<Entry> floatTest = new LinkedList<Entry>();
     String testText = " (1.23--2.00) *62.3/ 8 ";
-    floatTest.addAll(Arrays.asList(new Entry[] {new Entry(Symbol.LEFT_BRACKET),
-        new Entry((float) 1.23), new Entry(Symbol.MINUS), new Entry(-2),
-        new Entry(Symbol.RIGHT_BRACKET), new Entry(Symbol.TIMES), new Entry((float) 62.3),
-        new Entry(Symbol.DIVIDE), new Entry(8)}));
+    floatTest.addAll(Arrays.asList(new Entry[] {Entry.getEntry(Symbol.LEFT_BRACKET),
+        Entry.getEntry((float) 1.23), Entry.getEntry(Symbol.MINUS), Entry.getEntry(-2),
+        Entry.getEntry(Symbol.RIGHT_BRACKET), Entry.getEntry(Symbol.TIMES), Entry.getEntry((float) 62.3),
+        Entry.getEntry(Symbol.DIVIDE), Entry.getEntry(8)}));
     assertEquals(floatTest, Tokenizer.parse(testText),
         "tokenizer should parse flotaing point number such as -1.23");
   }
@@ -67,20 +66,47 @@ class TokenizerTest {
   void testAlternateBrackets() throws InvalidExpressionException {
     LinkedList<Entry> bracketTest = new LinkedList<Entry>();
     String testText = "[]";
-    bracketTest.add(new Entry(Symbol.LEFT_BRACKET));
-    bracketTest.add(new Entry(Symbol.RIGHT_BRACKET));
+    bracketTest.add(Entry.getEntry(Symbol.LEFT_BRACKET));
+    bracketTest.add(Entry.getEntry(Symbol.RIGHT_BRACKET));
     assertEquals(bracketTest, Tokenizer.parse(testText),
         "tokenizer should parse altenate types of brackets");
   }
   @Test
   void testOperators() throws InvalidExpressionException{
-    LinkedList<Entry> bracketTest = new LinkedList<Entry>();
-    bracketTest.add(new Entry(Symbol.PLUS));
-    bracketTest.add(new Entry(Symbol.MINUS));
-    bracketTest.add(new Entry(Symbol.DIVIDE));
-    bracketTest.add(new Entry(Symbol.TIMES));
-    bracketTest.add(new Entry(Symbol.POWER));
-    assertEquals(bracketTest, Tokenizer.parse("+-/*^"),
+    LinkedList<Entry> opTest = new LinkedList<Entry>();
+    opTest.add(Entry.getEntry(Symbol.PLUS));
+    opTest.add(Entry.getEntry(Symbol.MINUS));
+    opTest.add(Entry.getEntry(Symbol.DIVIDE));
+    opTest.add(Entry.getEntry(Symbol.TIMES));
+    opTest.add(Entry.getEntry(Symbol.POWER));
+    assertEquals(opTest, Tokenizer.parse("+-/*^"),
         "tokenizer should be able to parse all these operators");
+  }
+  @Test
+  void testBlank() {
+    assertThrows(InvalidExpressionException.class, () -> {
+      Tokenizer.parse("");
+    }, "an empty expression should throw an error");
+    assertThrows(InvalidExpressionException.class, () -> {
+      Tokenizer.parse("    ");
+    }, "an blank expression should throw an error");
+  }
+  @Test
+  void testSubractionNegativeNumbers() throws InvalidExpressionException {
+    // the string 1-1 should be the same as 1 - 1 not 1 -1
+    // whereas 1*-1 should be 1 * -1 
+    LinkedList<Entry> opTest = new LinkedList<Entry>();
+    opTest.add(Entry.getEntry(1));
+    opTest.add(Entry.getEntry(Symbol.MINUS));
+    opTest.add(Entry.getEntry(1));
+    assertEquals(opTest, Tokenizer.parse("1-1"),
+        "should be able to tell if is a negative number or a subtraction");
+    
+    opTest = new LinkedList<Entry>();
+    opTest.add(Entry.getEntry(1));
+    opTest.add(Entry.getEntry(Symbol.TIMES));
+    opTest.add(Entry.getEntry(-1));
+    assertEquals(opTest, Tokenizer.parse("1*-1"),
+        "should be able to tell if is a negative number or a subtraction");
   }
 }
