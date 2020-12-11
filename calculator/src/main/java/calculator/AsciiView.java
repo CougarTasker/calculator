@@ -1,7 +1,6 @@
 package calculator;
 
 import java.io.Console;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
@@ -23,7 +22,7 @@ public class AsciiView implements ViewInterface, Runnable {
 
 
   private AsciiView() {
-    
+
   }
 
   private void printHelp() {
@@ -34,6 +33,11 @@ public class AsciiView implements ViewInterface, Runnable {
     System.out.println(" - to change the expression mode type 'set <expression_type>'");
     System.out.println("    + set infix -> for infix notation");
     System.out.println("    + set rpn   -> for reverse polish notation");
+    System.out.println(" - to assign a varible follow your expression with => x");
+    System.out.println("    + x could be any letter you want ");
+    System.out.println("    + you can use the varible in an expression");
+    System.out.println("    + x + 1 => x   will increment x by one everytime you run it");
+    System.out.println("    + to see the value of a varible just type its character");
     System.out.println(" - to print this message type help or ?\n");
   }
 
@@ -125,7 +129,7 @@ public class AsciiView implements ViewInterface, Runnable {
         notifyCalcObservers();
       }
     }
-    
+
   }
 
 }

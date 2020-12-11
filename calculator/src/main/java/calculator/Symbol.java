@@ -8,7 +8,7 @@ package calculator;
  */
 public enum Symbol {
   // brackets and invalid aren't operators so have no function
-  LEFT_BRACKET, RIGHT_BRACKET, INVALID,
+  LEFT_BRACKET, RIGHT_BRACKET, INVALID, ASSIGNMENT,
   // lowest precedence
   PLUS(2, true) {
     @Override

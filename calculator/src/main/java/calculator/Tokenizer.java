@@ -195,6 +195,10 @@ public abstract class Tokenizer {
       // if a digit follows a - then it is a valid number ie -2
       new Transition(2, c -> Character.isDigit(c), SUCCESS[0])};
 
+  private static final Transition[] assignment =
+      new Transition[] {new Transition(START, '=', 1), new Transition(1, '>', SUCCESS[0])};
+
+
   /**
    * An array of all tokens that are recognised.
    */
@@ -211,7 +215,11 @@ public abstract class Tokenizer {
 
       // different types of brackets should be accepted to make it easer to understand nesting.
       {new Token(Symbol.LEFT_BRACKET, '('), new Token(Symbol.RIGHT_BRACKET, ')'),
-          new Token(Symbol.LEFT_BRACKET, '['), new Token(Symbol.RIGHT_BRACKET, ']')}};
+          new Token(Symbol.LEFT_BRACKET, '['), new Token(Symbol.RIGHT_BRACKET, ']')},
+      // new level for assignment and varibles as this is an unlikely to happen often
+      {new Token(s -> Entry.getEntry(s),
+          new Transition(START, c -> Character.isLetter(c), SUCCESS[0])),
+          new Token(Symbol.ASSIGNMENT, assignment)}};
 
 
   // save a reference to invalid so we don't need to look it up each time
@@ -236,7 +244,8 @@ public abstract class Tokenizer {
     boolean fistComeFirstServed = true;
     Pair<Integer, Entry> cur = null;
     while (base < input.length()) { // while there are still unparsed characters
-      fistComeFirstServed = cur == null || cur.getValue().getType() != Type.NUMBER;
+      fistComeFirstServed = cur == null
+          || cur.getValue().getType() != Type.NUMBER && cur.getValue().getType() != Type.STRING;
       for (Token[] level : tokens) {
         // for each level
         if (fistComeFirstServed) {
@@ -264,7 +273,8 @@ public abstract class Tokenizer {
       }
       if (cur.getKey() == 0) {
         // if there was no match for the flowing characters then then this expression is wrong
-        throw new InvalidExpressionException("unrecognised symbol in expression");
+        throw new InvalidExpressionException(
+            "unrecognised symbol in expression" + input.substring(base));
       }
       // move forward through the string
       base += cur.getKey();
@@ -278,6 +288,8 @@ public abstract class Tokenizer {
     return out;
   }
 
+  
+
   /**
    * When called on a valid expression string its value will be calculated. However on an invalid
    * expression a calculation exception will be thrown. The syntax of the expression is dependent on
@@ -288,9 +300,15 @@ public abstract class Tokenizer {
    * @throws CalculationException thrown if there is an error during the calculation.
    */
   public float evaluate(String what) throws CalculationException {
-    float out = this.evaluate(parse(what));
+    // this is to find varibles and repalce them with the correct values or setup assignments
+    Pair<LinkedList<Entry>, String> in = VariableStorage.convertVaribles(parse(what));
+    
+    float out = this.evaluate(in.getKey());
     if (!Float.isFinite(out)) {
       throw new CalculationException("arthmetic overflow");
+    }
+    if (in.getValue() != null) {
+      VariableStorage.setVar(in.getValue(), out);
     }
     return out;
   }
