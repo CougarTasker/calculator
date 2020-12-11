@@ -101,6 +101,7 @@ public class GuiView extends Application implements ViewInterface {
     Parent root = l.load();
     Scene scene = new Scene(root, 450, 150);
     primaryStage.setScene(scene);
+    primaryStage.setTitle("CS2800 - Calculator Porgram");
     primaryStage.show();
   }
 

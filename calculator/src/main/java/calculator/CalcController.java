@@ -68,9 +68,18 @@ public class CalcController extends Application {
    */
   public CalcController(String[] args) {
     if (System.console() != null) {
-      System.out.println("the program has a console attached");
+      AsciiView view = AsciiView.getAsciiView();
+      Thread t = new Thread(view);
+      this.view = view;
+      addViewObservers();
+      t.run();
+      try {
+        t.join();
+      } catch (InterruptedException e) {
+        // if we get interrupted we want to exit gracfully 
+      }
     }
-    // this.view = new AsciiView();
+
   }
 
   /**
